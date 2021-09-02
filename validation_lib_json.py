@@ -10,19 +10,20 @@ from typing import Text, Optional
 from tensorflow_data_validation.api import validation_api
 from tensorflow_data_validation.api import stats_api
 from tensorflow_data_validation.statistics import stats_impl
+from tensorflow_data_validation.statistics import stats_options as options
 from tensorflow_data_validation.utils import stats_util
 from tensorflow_metadata.proto.v0 import schema_pb2
 
 @beam.ptransform_fn
 @beam.typehints.with_input_types(Text)
 @beam.typehints.with_output_types(pa.RecordBatch)
-def decodeJSON(self, data_location, schema: Optional[schema_pb2.Schema] = None):
+def decodeJSON(self, data_location: Text, schema: Optional[schema_pb2.Schema] = None):
     df = pd.read_json(data_location, orient='records')
     rb = pa.RecordBatch.from_pandas(df, schema=schema)
 
     return rb
 
-def validate_examples_in_JSON(data_location, stats_options, output_path: Optional[Text] = None):
+def validate_examples_in_JSON(data_location: Text, stats_options: options.StatsOptions, output_path: Optional[Text] = None):
     """Validate examples in JSON.
     """
 
